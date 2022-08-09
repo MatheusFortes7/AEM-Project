@@ -48,7 +48,8 @@ public class ClientServlet extends SlingAllMethodsServlet {
             String idString = request.getParameter("id");
             int id = Integer.parseInt(idString);
             try{
-                response.getWriter().write(new Gson().toJson(clientService.listClientById(id)));
+                String clients = clientService.listClientById(id);
+                response.getWriter().write(clients);
             } catch (IOException e){
                 throw new RuntimeException(e);
             }
