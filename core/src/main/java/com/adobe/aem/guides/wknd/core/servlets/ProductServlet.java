@@ -1,6 +1,8 @@
 package com.adobe.aem.guides.wknd.core.servlets;
 
+import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.service.ProductService;
+import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
@@ -44,7 +46,7 @@ public class ProductServlet extends SlingAllMethodsServlet {
                 String products = productService.listProductById(id);
                 response.getWriter().write(products);
             } catch (IOException e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else if(request.getParameter("category") != null){
             String category = request.getParameter("category");
@@ -52,7 +54,7 @@ public class ProductServlet extends SlingAllMethodsServlet {
                 String products = productService.listProductByCategory(category);
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else if(request.getParameter("name") != null){
             String name = request.getParameter("name");
@@ -60,21 +62,21 @@ public class ProductServlet extends SlingAllMethodsServlet {
                 String products = productService.listProductByName(name);
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else if(request.getParameter("order") != null){
             try{
                 String products = productService.listProductByPrice();
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else {
             String clients = productService.listAll();
             try{
                 response.getWriter().write(clients);
             } catch (Exception e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         }
     }

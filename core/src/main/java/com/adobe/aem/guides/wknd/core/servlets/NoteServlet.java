@@ -1,7 +1,9 @@
 package com.adobe.aem.guides.wknd.core.servlets;
 
+import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.service.ClientService;
 import com.adobe.aem.guides.wknd.core.service.NoteService;
+import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
@@ -45,14 +47,14 @@ public class NoteServlet extends SlingAllMethodsServlet {
                 String notes = noteService.listNoteByClientId(id);
                 response.getWriter().write(notes);
             } catch (IOException e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else{
             String notes = noteService.listNotes();
             try{
                 response.getWriter().write(notes);
             } catch (Exception e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         }
     }

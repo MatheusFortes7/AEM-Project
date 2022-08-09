@@ -1,23 +1,18 @@
 package com.adobe.aem.guides.wknd.core.servlets;
 
-import com.adobe.aem.guides.wknd.core.models.Client;
+import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.service.ClientService;
-import com.adobe.xfa.Int;
 import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.servlets.HttpConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
-import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.propertytypes.ServiceDescription;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-
 import java.io.IOException;
-import java.util.List;
 
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
@@ -51,21 +46,23 @@ public class ClientServlet extends SlingAllMethodsServlet {
                 String clients = clientService.listClientById(id);
                 response.getWriter().write(clients);
             } catch (IOException e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else{
             String clients = clientService.listClient();
             try{
                 response.getWriter().write(clients);
             } catch (Exception e){
-                throw new RuntimeException(e);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         }
     }
 
     @Override
     protected void doPost(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
         clientService.save(request);
+        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
     }
 
     @Override
