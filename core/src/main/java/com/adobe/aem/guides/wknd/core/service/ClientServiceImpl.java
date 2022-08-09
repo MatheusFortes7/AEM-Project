@@ -3,12 +3,14 @@ package com.adobe.aem.guides.wknd.core.service;
 import com.adobe.aem.guides.wknd.core.dao.ClientDao;
 import com.adobe.aem.guides.wknd.core.models.Client;
 import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component(immediate = true, service = ClientService.class)
@@ -45,19 +47,21 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public void save(SlingHttpServletRequest request) {
-        /*try {
-            //TODO VER COMO FUNCIONA O fromJson da bib Gson
-            //List<Client> list = new Gson().fromJson();
-
-            for(Client u : list ){
-                if(clientDao.getClientByID(u.getIdClient()) == null){
-                    clientDao.save(u);
-                }
-            }
+        String userPostString = null;
+        try {
+            userPostString = IOUtils.toString(request.getReader());
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
+        Client objWordConverter;
+        try {
+            objWordConverter = new Gson().fromJson(userPostString, Client.class);
 
+            clientDao.save(objWordConverter);
+
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
