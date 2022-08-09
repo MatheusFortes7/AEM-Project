@@ -46,9 +46,8 @@ public class ClientServiceImpl implements ClientService{
     @Override
     public void save(SlingHttpServletRequest request) {
         /*try {
-            BufferedReader bf = request.getReader();
             //TODO VER COMO FUNCIONA O fromJson da bib Gson
-            //List<Client> list = new Gson().fromJson(bf,);
+            //List<Client> list = new Gson().fromJson();
 
             for(Client u : list ){
                 if(clientDao.getClientByID(u.getIdClient()) == null){

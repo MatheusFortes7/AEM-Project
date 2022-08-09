@@ -1,7 +1,9 @@
 package com.adobe.aem.guides.wknd.core.servlets;
 
+import com.adobe.aem.guides.wknd.core.models.Client;
 import com.adobe.aem.guides.wknd.core.service.ClientService;
 import com.adobe.xfa.Int;
+import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.HttpConstants;
@@ -15,6 +17,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.apache.sling.api.servlets.ServletResolverConstants.*;
 
@@ -40,17 +43,22 @@ public class ClientServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
-        String json = null;
-        try{
-            if(id.isEmpty() || id == null){
-                json = clientService.listClient();
-            } else {
-                int idFinal = Integer.parseInt(id);
-                json = clientService.listClientById(idFinal);
+        response.setContentType("application/json");
+        if(request.getParameter("id") != null){
+            String idString = request.getParameter("id");
+            int id = Integer.parseInt(idString);
+            try{
+                response.getWriter().write(new Gson().toJson(clientService.listClientById(id)));
+            } catch (IOException e){
+                throw new RuntimeException(e);
             }
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+        } else{
+            String clients = clientService.listClient();
+            try{
+                response.getWriter().write(clients);
+            } catch (Exception e){
+                throw new RuntimeException(e);
+            }
         }
     }
 

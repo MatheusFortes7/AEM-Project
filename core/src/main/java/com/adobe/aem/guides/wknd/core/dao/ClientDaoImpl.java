@@ -43,7 +43,7 @@ public class ClientDaoImpl implements ClientDao{
 
         Client client = null;
         try(Connection connection = databaseService.getConnection()){
-            String sql = "SELECT * FROM aem.client WHERE id = ?";
+            String sql = "SELECT * FROM client WHERE idclient = ?";
             try (PreparedStatement pstm = connection.prepareStatement(sql)) {
                 pstm.setInt(1, id);
                 pstm.execute();
