@@ -43,6 +43,7 @@ public class NoteDaoImpl implements NoteDao{
             String sql = "SELECT * FROM aem.note WHERE idclient = ?";
             List<Note> notes = new LinkedList<>();
             try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+                pstm.setInt(1, idClient);
                 pstm.execute();
                 try (ResultSet rst = pstm.getResultSet()) {
                     while (rst.next()) {
@@ -51,7 +52,7 @@ public class NoteDaoImpl implements NoteDao{
                     }
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e.getMessage() + "Error while trying to connect to database");
+                throw new RuntimeException(e.getMessage() + "Error while trying to get data");
             }
             return notes;
         } catch (SQLException e) {
