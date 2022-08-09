@@ -71,6 +71,21 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public void update(SlingHttpServletRequest request) {
+        String userPostString = null;
+        try {
+            userPostString = IOUtils.toString(request.getReader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Client objWordConverter;
+        try {
+            objWordConverter = new Gson().fromJson(userPostString, Client.class);
+            request.setAttribute("name", objWordConverter.getName());
+            request.setAttribute("id", objWordConverter.getIdClient());
+            clientDao.update(objWordConverter.getIdClient(), objWordConverter.getName());
 
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 }

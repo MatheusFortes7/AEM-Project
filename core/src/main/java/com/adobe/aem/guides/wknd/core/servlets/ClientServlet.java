@@ -72,6 +72,10 @@ public class ClientServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doPut(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-
+        response.setContentType("application/json");
+        clientService.update(request);
+        response.getWriter().write((String) request.getAttribute("name"));
+        response.getWriter().write((Integer) request.getAttribute("id"));
+        response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
     }
 }
