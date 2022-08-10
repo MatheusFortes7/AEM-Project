@@ -55,7 +55,8 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
-
+        response.setContentType("application/json");
+        delete(request, response);
     }
 
     @Override
@@ -113,8 +114,25 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public void delete(SlingHttpServletRequest request) {
+    public void delete(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        try {
+            BufferedReader reader = request.getReader();
+            Type listType = new TypeToken<List<Client>>() {}.getType();
+            List<Client> clients = new Gson().fromJson(reader, listType);
 
+            for(Client u : clients){
+                if(clientDao.getClientByID(u.getIdClient()) == null){
+                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe")));
+                } else {
+                    if(clientDao.getClientByID(u.getIdClient()) != null){
+                        clientDao.delete(u.getIdClient());
+                        response.getWriter().write(new Gson().toJson(new Mensage("client removed successfully")));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

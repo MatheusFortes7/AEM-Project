@@ -76,11 +76,11 @@ public class ClientDaoImpl implements ClientDao{
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(int idclient) {
         try(Connection connection = databaseService.getConnection()){
-            String sql = "DELETE FROM aem.client WHERE name = ?";
+            String sql = "DELETE FROM aem.client WHERE idclient = ?";
             try(PreparedStatement pstm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
-                pstm.setString(1, name);
+                pstm.setInt(1, idclient);
                 pstm.execute();
             }
         }catch (Exception e){

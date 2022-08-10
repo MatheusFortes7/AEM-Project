@@ -14,7 +14,7 @@ public interface ClientDao {
     void save(Client client);
 
     //delete
-    void delete(String name);
+    void delete(int idclient);
 
     //put
     void update(int id, String name);
