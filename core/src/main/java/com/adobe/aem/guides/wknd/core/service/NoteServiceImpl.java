@@ -86,7 +86,8 @@ public class NoteServiceImpl implements NoteService{
     public void save(SlingHttpServletRequest request) {
         /*try {
             //TODO VER COMO FUNCIONA O fromJson da bib Gson
-            //List<Client> list = new Gson().fromJson();
+            Type typeList = new TypeToken<ArrayList<Note>>() {}.getType();
+            //List<Client> list = new Gson().fromJson(bf, typeList);
 
             for(Client u : list ){
                 if(clientDao.getClientByID(u.getIdClient()) == null){

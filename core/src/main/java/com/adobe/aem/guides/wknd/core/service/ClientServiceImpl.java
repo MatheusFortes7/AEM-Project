@@ -4,6 +4,7 @@ import com.adobe.aem.guides.wknd.core.dao.ClientDao;
 import com.adobe.aem.guides.wknd.core.models.Client;
 import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
@@ -11,7 +12,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import javax.servlet.ServletException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Component(immediate = true, service = ClientService.class)
@@ -47,8 +50,7 @@ public class ClientServiceImpl implements ClientService{
     @Override
     public void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        save(request);
-        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
+        save(request, response);
     }
 
     @Override
@@ -90,22 +92,26 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public void save(SlingHttpServletRequest request) {
-        String userPostString = null;
+    public void save(SlingHttpServletRequest request, SlingHttpServletResponse response) {
         try {
-            userPostString = IOUtils.toString(request.getReader());
+            BufferedReader reader = request.getReader();
+            Type listType = new TypeToken<List<Client>>() {}.getType();
+            List<Client> clients = new Gson().fromJson(reader, listType);
+
+            for(Client u : clients){
+                if(u.getName() == null || u.getName().isEmpty()){
+                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete")));
+                } else {
+                    if(clientDao.getClientByID(u.getIdClient()) == null){
+                        clientDao.save(u);
+                        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
+                    }
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Client objWordConverter;
-        try {
-            objWordConverter = new Gson().fromJson(userPostString, Client.class);
 
-            clientDao.save(objWordConverter);
-
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

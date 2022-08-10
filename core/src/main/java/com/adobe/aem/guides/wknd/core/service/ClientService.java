@@ -14,7 +14,7 @@ public interface ClientService {
     void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException;
     String listClient();
     String listClientById(int id);
-    void save(SlingHttpServletRequest request);
+    void save(SlingHttpServletRequest request, SlingHttpServletResponse response);
     void delete(SlingHttpServletRequest request);
     void update(SlingHttpServletRequest request);
 
