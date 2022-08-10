@@ -1,8 +1,6 @@
 package com.adobe.aem.guides.wknd.core.servlets;
 
-import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.service.ClientService;
-import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;

@@ -11,9 +11,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import javax.servlet.ServletException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 @Component(immediate = true, service = ClientService.class)

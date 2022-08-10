@@ -1,8 +1,6 @@
 package com.adobe.aem.guides.wknd.core.service;
 
-import com.adobe.aem.guides.wknd.core.dao.ClientDao;
 import com.adobe.aem.guides.wknd.core.dao.NoteDao;
-import com.adobe.aem.guides.wknd.core.models.Client;
 import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.models.Note;
 import com.google.gson.Gson;
