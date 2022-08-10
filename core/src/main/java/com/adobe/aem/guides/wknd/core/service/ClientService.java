@@ -16,6 +16,6 @@ public interface ClientService {
     String listClientById(int id);
     void save(SlingHttpServletRequest request, SlingHttpServletResponse response);
     void delete(SlingHttpServletRequest request);
-    void update(SlingHttpServletRequest request);
+    void update(SlingHttpServletRequest request, SlingHttpServletResponse response);
 
 }

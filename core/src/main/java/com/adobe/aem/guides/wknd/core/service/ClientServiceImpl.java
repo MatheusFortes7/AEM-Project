@@ -61,10 +61,8 @@ public class ClientServiceImpl implements ClientService{
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
-        update(request);
-        response.getWriter().write((String) request.getAttribute("name"));
-        response.getWriter().write((Integer) request.getAttribute("id"));
-        response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
+        response.setCharacterEncoding("UTF-8");
+        update(request, response);
     }
 
     @Override
@@ -120,22 +118,30 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public void update(SlingHttpServletRequest request) {
+    public void update(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         String userPostString = null;
         try {
             userPostString = IOUtils.toString(request.getReader());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Client objWordConverter;
+        Client client;
         try {
-            objWordConverter = new Gson().fromJson(userPostString, Client.class);
-            request.setAttribute("name", objWordConverter.getName());
-            request.setAttribute("id", objWordConverter.getIdClient());
-            clientDao.update(objWordConverter.getIdClient(), objWordConverter.getName());
+            client = new Gson().fromJson(userPostString, Client.class);
+            if(client.getName() != null){
+                clientDao.update(client.getIdClient(), client.getName());
+                response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
+            } else {
+                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete")));
+            }
 
         }catch (Exception e){
-            throw new RuntimeException(e);
+            try {
+                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json")));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
