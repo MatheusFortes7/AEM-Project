@@ -38,52 +38,12 @@ public class ProductServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        if(request.getParameter("id") != null){
-            String idString = request.getParameter("id");
-            int id = Integer.parseInt(idString);
-            try{
-                String products = productService.listProductById(id);
-                response.getWriter().write(products);
-            } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else if(request.getParameter("category") != null){
-            String category = request.getParameter("category");
-            try{
-                String products = productService.listProductByCategory(category);
-                response.getWriter().write(products);
-            }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else if(request.getParameter("name") != null){
-            String name = request.getParameter("name");
-            try{
-                String products = productService.listProductByName(name);
-                response.getWriter().write(products);
-            }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else if(request.getParameter("order") != null){
-            try{
-                String products = productService.listProductByPrice();
-                response.getWriter().write(products);
-            }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else {
-            String clients = productService.listAll();
-            try{
-                response.getWriter().write(clients);
-            } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        }
+        productService.doGet(request,response);
     }
 
     @Override
     protected void doPost(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        productService.save(request);
+        productService.doPost(request, response);
     }
 
     @Override

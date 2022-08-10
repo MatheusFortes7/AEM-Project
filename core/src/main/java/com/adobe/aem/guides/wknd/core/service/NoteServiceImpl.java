@@ -3,12 +3,16 @@ package com.adobe.aem.guides.wknd.core.service;
 import com.adobe.aem.guides.wknd.core.dao.ClientDao;
 import com.adobe.aem.guides.wknd.core.dao.NoteDao;
 import com.adobe.aem.guides.wknd.core.models.Client;
+import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.models.Note;
 import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.servlet.ServletException;
+import java.io.IOException;
 import java.util.List;
 
 @Component(immediate = true, service = NoteService.class)
@@ -18,6 +22,43 @@ public class NoteServiceImpl implements NoteService{
     private NoteDao noteDao;
     @Reference
     private DatabaseService  databaseService;
+
+    @Override
+    public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        if(request.getParameter("idclient") != null){
+            String idString = request.getParameter("idclient");
+            int id = Integer.parseInt(idString);
+            try{
+                String notes = listNoteByClientId(id);
+                response.getWriter().write(notes);
+            } catch (IOException e){
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+            }
+        } else{
+            String notes = listNotes();
+            try{
+                response.getWriter().write(notes);
+            } catch (Exception e){
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+            }
+        }
+    }
+
+    @Override
+    public void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+        save(request);
+    }
+
+    @Override
+    public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+
+    }
+
+    @Override
+    public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+
+    }
 
     @Override
     public String listNotes() {

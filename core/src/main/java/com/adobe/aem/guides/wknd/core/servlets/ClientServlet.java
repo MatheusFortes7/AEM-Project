@@ -38,44 +38,21 @@ public class ClientServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        if(request.getParameter("id") != null){
-            String idString = request.getParameter("id");
-            int id = Integer.parseInt(idString);
-            try{
-                String clients = clientService.listClientById(id);
-                response.getWriter().write(clients);
-            } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else{
-            String clients = clientService.listClient();
-            try{
-                response.getWriter().write(clients);
-            } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        }
+        clientService.doGet(request, response);
     }
 
     @Override
     protected void doPost(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        clientService.save(request);
-        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
+        clientService.doPost(request,response);
     }
 
     @Override
     protected void doDelete(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-
+        clientService.doDelete(request, response);
     }
 
     @Override
     protected void doPut(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        clientService.update(request);
-        response.getWriter().write((String) request.getAttribute("name"));
-        response.getWriter().write((Integer) request.getAttribute("id"));
-        response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
+        clientService.doPut(request, response);
     }
 }

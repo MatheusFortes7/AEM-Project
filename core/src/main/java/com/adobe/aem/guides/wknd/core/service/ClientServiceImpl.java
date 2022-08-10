@@ -2,12 +2,15 @@ package com.adobe.aem.guides.wknd.core.service;
 
 import com.adobe.aem.guides.wknd.core.dao.ClientDao;
 import com.adobe.aem.guides.wknd.core.models.Client;
+import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
+import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+import javax.servlet.ServletException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -20,6 +23,49 @@ public class ClientServiceImpl implements ClientService{
     private ClientDao clientDao;
     @Reference
     private DatabaseService  databaseService;
+
+    @Override
+    public void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        if(request.getParameter("id") != null){
+            String idString = request.getParameter("id");
+            int id = Integer.parseInt(idString);
+            try{
+                String clients = listClientById(id);
+                response.getWriter().write(clients);
+            } catch (IOException e){
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+            }
+        } else{
+            String clients = listClient();
+            try{
+                response.getWriter().write(clients);
+            } catch (Exception e){
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+            }
+        }
+    }
+
+    @Override
+    public void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        save(request);
+        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
+    }
+
+    @Override
+    public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+
+    }
+
+    @Override
+    public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        update(request);
+        response.getWriter().write((String) request.getAttribute("name"));
+        response.getWriter().write((Integer) request.getAttribute("id"));
+        response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
+    }
 
     @Override
     public String listClient() {

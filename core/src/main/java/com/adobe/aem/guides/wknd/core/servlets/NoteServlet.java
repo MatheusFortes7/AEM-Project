@@ -39,29 +39,12 @@ public class NoteServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doGet(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        if(request.getParameter("idclient") != null){
-            String idString = request.getParameter("idclient");
-            int id = Integer.parseInt(idString);
-            try{
-                String notes = noteService.listNoteByClientId(id);
-                response.getWriter().write(notes);
-            } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        } else{
-            String notes = noteService.listNotes();
-            try{
-                response.getWriter().write(notes);
-            } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
-            }
-        }
+        noteService.doGet(request, response);
     }
 
     @Override
     protected void doPost(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-        noteService.save(request);
+        noteService.doPost(request,response);
     }
 
     @Override
