@@ -4,13 +4,17 @@ import com.adobe.aem.guides.wknd.core.dao.ProductDao;
 import com.adobe.aem.guides.wknd.core.models.Mensage;
 import com.adobe.aem.guides.wknd.core.models.Product;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.apache.commons.io.IOUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import javax.servlet.ServletException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Component(immediate = true, service = ProductService.class)
@@ -69,17 +73,21 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
-        save(request);
+        response.setContentType("application/json");
+        save(request, response);
     }
 
     @Override
     public void doDelete(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
-
+        response.setContentType("application/json");
+        delete(request, response);
     }
 
     @Override
     public void doPut(SlingHttpServletRequest request, SlingHttpServletResponse response) throws ServletException, IOException {
-
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        update(request, response);
     }
 
     @Override
@@ -143,29 +151,77 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void save(SlingHttpServletRequest request) {
-        /*try {
-            //TODO VER COMO FUNCIONA O fromJson da bib Gson
-            //List<Client> list = new Gson().fromJson();
+    public void save(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        try {
+            BufferedReader reader = request.getReader();
+            Type listType = new TypeToken<List<Product>>() {}.getType();
+            List<Product> products = new Gson().fromJson(reader, listType);
 
-            for(Client u : list ){
-                if(clientDao.getClientByID(u.getIdClient()) == null){
-                    clientDao.save(u);
+            for(Product u : products){
+                if(u.getName() == null || u.getName().isEmpty()){
+                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete")));
+                } else {
+                    if(productDao.getProductById(u.getIdProduct()) == null){
+                        productDao.save(u);
+                        response.getWriter().write(new Gson().toJson(new Mensage("product added successfully")));
+                    }
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
     }
 
     @Override
-    public void delete(SlingHttpServletRequest request) {
+    public void delete(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        try {
+            BufferedReader reader = request.getReader();
+            Type listType = new TypeToken<List<Product>>() {}.getType();
+            List<Product> products = new Gson().fromJson(reader, listType);
 
+            for(Product u : products){
+                if(productDao.getProductById(u.getIdProduct()) == null){
+                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe")));
+                } else {
+                    if(productDao.getProductById(u.getIdProduct()) != null){
+                        productDao.delete(u.getIdProduct());
+                        response.getWriter().write(new Gson().toJson(new Mensage("product removed successfully")));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void update(SlingHttpServletRequest request) {
+    public void update(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        String userPostString = null;
+        try {
+            userPostString = IOUtils.toString(request.getReader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Product product;
+        try {
+            //TODO ERRO NA LINHA ABAIXO, NAO SEI O PORQUE, MAS TA ROLANDO
+            product = new Gson().fromJson(userPostString, Product.class);
 
+            if(product.getName() != null && product.getCategory() != null){
+
+                productDao.update(product.getIdProduct(), product);
+                response.getWriter().write(new Gson().toJson(new Mensage("product updated successfully")));
+            } else {
+                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete")));
+            }
+
+        }catch (Exception e){
+            try {
+                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json")));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }

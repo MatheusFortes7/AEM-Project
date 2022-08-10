@@ -17,8 +17,8 @@ public interface ProductService {
     String listProductByPrice();
     String listProductByCategory(String category);
     String listProductByName(String name);
-    void save(SlingHttpServletRequest request);
-    void delete(SlingHttpServletRequest request);
-    void update(SlingHttpServletRequest request);
+    void save(SlingHttpServletRequest request, SlingHttpServletResponse response);
+    void delete(SlingHttpServletRequest request, SlingHttpServletResponse response);
+    void update(SlingHttpServletRequest request, SlingHttpServletResponse response);
 
 }

@@ -46,11 +46,11 @@ public class ProductServlet extends SlingAllMethodsServlet {
 
     @Override
     protected void doDelete(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-
+        productService.doDelete(request, response);
     }
 
     @Override
     protected void doPut(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
-
+        productService.doPut(request, response);
     }
 }
