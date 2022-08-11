@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService{
                 String products = listProductById(id);
                 response.getWriter().write(products);
             } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         } else if(request.getParameter("category") != null){
             String category = request.getParameter("category");
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService{
                 String products = listProductByCategory(category);
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         } else if(request.getParameter("name") != null){
             String name = request.getParameter("name");
@@ -52,21 +52,21 @@ public class ProductServiceImpl implements ProductService{
                 String products = listProductByName(name);
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         } else if(request.getParameter("order") != null){
             try{
                 String products = listProductByPrice();
                 response.getWriter().write(products);
             }catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         } else {
             String clients = listAll();
             try{
                 response.getWriter().write(clients);
             } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         }
     }
@@ -159,11 +159,11 @@ public class ProductServiceImpl implements ProductService{
 
             for(Product u : products){
                 if(u.getName() == null || u.getName().isEmpty()){
-                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete")));
+                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete", 401)));
                 } else {
                     if(productDao.getProductById(u.getIdProduct()) == null){
                         productDao.save(u);
-                        response.getWriter().write(new Gson().toJson(new Mensage("product added successfully")));
+                        response.getWriter().write(new Gson().toJson(new Mensage("product added successfully", 401)));
                     }
                 }
             }
@@ -182,11 +182,11 @@ public class ProductServiceImpl implements ProductService{
 
             for(Product u : products){
                 if(productDao.getProductById(u.getIdProduct()) == null){
-                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe")));
+                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe", 401)));
                 } else {
                     if(productDao.getProductById(u.getIdProduct()) != null){
                         productDao.delete(u.getIdProduct());
-                        response.getWriter().write(new Gson().toJson(new Mensage("product removed successfully")));
+                        response.getWriter().write(new Gson().toJson(new Mensage("product removed successfully", 401)));
                     }
                 }
             }
@@ -209,14 +209,14 @@ public class ProductServiceImpl implements ProductService{
             product = new Gson().fromJson(userPostString, Product.class);
             if(product.getName() != null && product.getCategory() != null){
                 productDao.update(product.getIdProduct(), product);
-                response.getWriter().write(new Gson().toJson(new Mensage("product updated successfully")));
+                response.getWriter().write(new Gson().toJson(new Mensage("product updated successfully", 401)));
             } else {
-                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete")));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete", 401)));
             }
 
         }catch (Exception e){
             try {
-                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json")));
+                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json", 401)));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

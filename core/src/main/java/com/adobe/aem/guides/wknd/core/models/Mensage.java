@@ -7,8 +7,10 @@ import org.apache.sling.models.annotations.Model;
 public class Mensage {
 
     private String mensage;
+    private int errorcode;
 
-    public Mensage(String mensage) {
+    public Mensage(String mensage, int errorcode) {
         this.mensage = mensage;
+        this.errorcode = errorcode;
     }
 }

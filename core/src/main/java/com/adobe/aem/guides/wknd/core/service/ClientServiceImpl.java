@@ -35,14 +35,14 @@ public class ClientServiceImpl implements ClientService{
                 String clients = listClientById(id);
                 response.getWriter().write(clients);
             } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         } else{
             String clients = listClient();
             try{
                 response.getWriter().write(clients);
             } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
             }
         }
     }
@@ -99,11 +99,11 @@ public class ClientServiceImpl implements ClientService{
 
             for(Client u : clients){
                 if(u.getName() == null || u.getName().isEmpty()){
-                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete")));
+                    response.getWriter().write(new Gson().toJson(new Mensage("Object must be complete", 401)));
                 } else {
                     if(clientDao.getClientByID(u.getIdClient()) == null){
                         clientDao.save(u);
-                        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully")));
+                        response.getWriter().write(new Gson().toJson(new Mensage("client added successfully", 401)));
                     }
                 }
             }
@@ -122,11 +122,11 @@ public class ClientServiceImpl implements ClientService{
 
             for(Client u : clients){
                 if(clientDao.getClientByID(u.getIdClient()) == null){
-                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe")));
+                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe", 401)));
                 } else {
                     if(clientDao.getClientByID(u.getIdClient()) != null){
                         clientDao.delete(u.getIdClient());
-                        response.getWriter().write(new Gson().toJson(new Mensage("client removed successfully")));
+                        response.getWriter().write(new Gson().toJson(new Mensage("client removed successfully", 401)));
                     }
                 }
             }
@@ -149,14 +149,14 @@ public class ClientServiceImpl implements ClientService{
             client = new Gson().fromJson(userPostString, Client.class);
             if(client.getName() != null){
                 clientDao.update(client.getIdClient(), client.getName());
-                response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully")));
+                response.getWriter().write(new Gson().toJson(new Mensage("client updated successfully", 401)));
             } else {
-                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete")));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json must be complete", 401)));
             }
 
         }catch (Exception e){
             try {
-                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json")));
+                response.getWriter().write(new Gson().toJson(new Mensage("This isn't a Json", 401)));
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
