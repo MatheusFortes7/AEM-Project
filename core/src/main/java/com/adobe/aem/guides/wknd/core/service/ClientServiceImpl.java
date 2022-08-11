@@ -97,8 +97,15 @@ public class ClientServiceImpl implements ClientService{
         try {
             BufferedReader reader = request.getReader();
             Type listType = new TypeToken<List<Client>>() {}.getType();
-            List<Client> clients = new Gson().fromJson(reader, listType);
-
+            List<Client> clients = null;
+            try{
+                clients = new Gson().fromJson(reader, listType);
+            } catch (Exception e){
+                response.setContentType("application/json");
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                return;
+            }
             for(Client u : clients){
                 if(u.getName() == null || u.getName().isEmpty()){
                     response.setStatus(400);
@@ -122,7 +129,15 @@ public class ClientServiceImpl implements ClientService{
         try {
             BufferedReader reader = request.getReader();
             Type listType = new TypeToken<List<Client>>() {}.getType();
-            List<Client> clients = new Gson().fromJson(reader, listType);
+            List<Client> clients = null;
+            try{
+                clients = new Gson().fromJson(reader, listType);
+            } catch (Exception e){
+                response.setContentType("application/json");
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                return;
+            }
 
             for(Client u : clients){
                 if(clientDao.getClientByID(u.getIdClient()) == null){

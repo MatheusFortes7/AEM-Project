@@ -160,7 +160,15 @@ public class ProductServiceImpl implements ProductService{
         try {
             BufferedReader reader = request.getReader();
             Type listType = new TypeToken<List<Product>>() {}.getType();
-            List<Product> products = new Gson().fromJson(reader, listType);
+            List<Product> products = null;
+            try{
+                products = new Gson().fromJson(reader, listType);
+            } catch (Exception e){
+                response.setContentType("application/json");
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                return;
+            }
 
             for(Product u : products){
                 if(u.getName() == null || u.getName().isEmpty()){
@@ -185,7 +193,15 @@ public class ProductServiceImpl implements ProductService{
         try {
             BufferedReader reader = request.getReader();
             Type listType = new TypeToken<List<Product>>() {}.getType();
-            List<Product> products = new Gson().fromJson(reader, listType);
+            List<Product> products = null;
+            try{
+                products = new Gson().fromJson(reader, listType);
+            } catch (Exception e){
+                response.setContentType("application/json");
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                return;
+            }
 
             for(Product u : products){
                 if(productDao.getProductById(u.getIdProduct()) == null){
