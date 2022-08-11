@@ -197,6 +197,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void update(SlingHttpServletRequest request, SlingHttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
         String userPostString = null;
         try {
             userPostString = IOUtils.toString(request.getReader());
@@ -205,11 +206,8 @@ public class ProductServiceImpl implements ProductService{
         }
         Product product;
         try {
-            //TODO ERRO NA LINHA ABAIXO, NAO SEI O PORQUE, MAS TA ROLANDO
             product = new Gson().fromJson(userPostString, Product.class);
-
             if(product.getName() != null && product.getCategory() != null){
-
                 productDao.update(product.getIdProduct(), product);
                 response.getWriter().write(new Gson().toJson(new Mensage("product updated successfully")));
             } else {
