@@ -31,14 +31,16 @@ public class NoteServiceImpl implements NoteService{
                 String notes = listNoteByClientId(id);
                 response.getWriter().write(notes);
             } catch (IOException e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         } else{
             String notes = listNotes();
             try{
                 response.getWriter().write(notes);
             } catch (Exception e){
-                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage(), 401))));
+                response.setStatus(400);
+                throw new RuntimeException(new Gson().toJson(String.valueOf(new Mensage(e.getMessage()))));
             }
         }
     }

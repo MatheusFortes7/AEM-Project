@@ -34,12 +34,12 @@ public class RelatoryServiceImpl implements RelatoryService{
             } catch (Exception e){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage("Parameter error", 400)));
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter error")));
             }
             if(clientDao.getClientByID(idClient) == null){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage("Client doen't exist in our databse", 401)));
+                response.getWriter().write(new Gson().toJson(new Mensage("Client doen't exist in our databse")));
             } else {
                 response.setContentType("application/html");
                 List<Note> notes = noteDao.noteByClient(idClient);
@@ -69,7 +69,7 @@ public class RelatoryServiceImpl implements RelatoryService{
         } catch (Exception e){
             response.setContentType("application/json");
             response.setStatus(400);
-            response.getWriter().write(new Gson().toJson(new Mensage("Error getting a relatory", 400)));
+            response.getWriter().write(new Gson().toJson(new Mensage("Error getting a relatory")));
         }
     }
 }
