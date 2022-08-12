@@ -4,6 +4,7 @@ import com.adobe.aem.guides.wknd.core.service.ClientService;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.propertytypes.ServiceDescription;
@@ -33,6 +34,11 @@ public class ClientServlet extends SlingAllMethodsServlet {
 
     @Reference
     private ClientService clientService;
+
+    @Activate
+    public ClientServlet(@Reference ClientService clientService){
+        this.clientService = clientService;
+    }
 
     @Override
     protected void doGet(SlingHttpServletRequest request,SlingHttpServletResponse response) throws ServletException, IOException {
