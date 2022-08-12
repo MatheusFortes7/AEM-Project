@@ -37,7 +37,7 @@ import java.io.IOException;
 @ServiceDescription("Demo to filter incoming requests")
 @ServiceRanking(-700)
 @ServiceVendor("Adobe")
-public class TestFilter implements Filter {
+public class ParamFilter implements Filter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
