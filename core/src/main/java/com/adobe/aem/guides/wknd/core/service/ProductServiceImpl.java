@@ -31,7 +31,16 @@ public class ProductServiceImpl implements ProductService{
         response.setContentType("application/json");
         if(request.getParameter("id") != null){
             String idString = request.getParameter("id");
-            int id = Integer.parseInt(idString);
+            int id = 0;
+
+            if(!(idString.isEmpty() || idString == null)){
+                id = Integer.parseInt(idString);
+            }else{
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
+                return;
+            }
+
             try{
                 String products = listProductById(id);
                 response.getWriter().write(products);
@@ -41,6 +50,13 @@ public class ProductServiceImpl implements ProductService{
             }
         } else if(request.getParameter("category") != null){
             String category = request.getParameter("category");
+
+            if(category.isEmpty() || category == null){
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
+                return;
+            }
+
             try{
                 String products = listProductByCategory(category);
                 response.getWriter().write(products);
@@ -50,6 +66,13 @@ public class ProductServiceImpl implements ProductService{
             }
         } else if(request.getParameter("name") != null){
             String name = request.getParameter("name");
+
+            if(name.isEmpty() || name == null){
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
+                return;
+            }
+
             try{
                 String products = listProductByName(name);
                 response.getWriter().write(products);

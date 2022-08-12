@@ -26,7 +26,16 @@ public class NoteServiceImpl implements NoteService{
         response.setContentType("application/json");
         if(request.getParameter("idclient") != null){
             String idString = request.getParameter("idclient");
-            int id = Integer.parseInt(idString);
+            int id = 0;
+
+            if(!(idString.isEmpty() || idString == null)){
+                id = Integer.parseInt(idString);
+            }else{
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
+                return;
+            }
+
             try{
                 String notes = listNoteByClientId(id);
                 response.getWriter().write(notes);

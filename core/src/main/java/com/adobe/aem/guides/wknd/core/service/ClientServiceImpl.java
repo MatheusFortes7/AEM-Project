@@ -30,7 +30,16 @@ public class ClientServiceImpl implements ClientService{
         response.setContentType("application/json");
         if(request.getParameter("id") != null){
             String idString = request.getParameter("id");
-            int id = Integer.parseInt(idString);
+            int id = 0;
+
+            if(!(idString.isEmpty() || idString == null)){
+                id = Integer.parseInt(idString);
+            }else{
+                response.setStatus(400);
+                response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
+                return;
+            };
+
             try{
                 String clients = listClientById(id);
                 response.getWriter().write(clients);
