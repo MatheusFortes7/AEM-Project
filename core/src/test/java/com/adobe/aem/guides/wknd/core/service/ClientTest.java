@@ -12,9 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @ExtendWith(AemContextExtension.class)
 public class ClientTest {
