@@ -29,7 +29,13 @@ public class NoteServiceImpl implements NoteService{
             int id = 0;
 
             if(!(idString.isEmpty() || idString == null)){
-                id = Integer.parseInt(idString);
+                try{
+                    id = Integer.parseInt(idString);
+                } catch (NumberFormatException e){
+                    response.setStatus(400);
+                    response.getWriter().write(new Gson().toJson(new Mensage("Parameter must be an int")));
+                    return;
+                }
             }else{
                 response.setStatus(400);
                 response.getWriter().write(new Gson().toJson(new Mensage("Parameter can't be null")));
