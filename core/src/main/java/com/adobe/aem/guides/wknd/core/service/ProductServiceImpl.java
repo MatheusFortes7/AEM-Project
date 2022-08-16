@@ -195,7 +195,7 @@ public class ProductServiceImpl implements ProductService{
             } catch (Exception e){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json badly formatted")));
                 return;
             }
 
@@ -228,14 +228,14 @@ public class ProductServiceImpl implements ProductService{
             } catch (Exception e){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json badly formatted")));
                 return;
             }
 
             for(Product u : products){
                 if(productDao.getProductById(u.getIdProduct()) == null){
                     response.setStatus(400);
-                    response.getWriter().write(new Gson().toJson(new Mensage("Client doesn't existe")));
+                    response.getWriter().write(new Gson().toJson(new Mensage("Product doesn't existe")));
                 } else {
                     if(productDao.getProductById(u.getIdProduct()) != null){
                         productDao.delete(u.getIdProduct());

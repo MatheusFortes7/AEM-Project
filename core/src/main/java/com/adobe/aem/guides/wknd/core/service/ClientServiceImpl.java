@@ -118,7 +118,7 @@ public class ClientServiceImpl implements ClientService{
             } catch (Exception e){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json badly formatted")));
                 return;
             }
             for(Client u : clients){
@@ -150,7 +150,7 @@ public class ClientServiceImpl implements ClientService{
             } catch (Exception e){
                 response.setContentType("application/json");
                 response.setStatus(400);
-                response.getWriter().write(new Gson().toJson(new Mensage(e.getMessage())));
+                response.getWriter().write(new Gson().toJson(new Mensage("Json badly formatted")));
                 return;
             }
 

@@ -47,11 +47,14 @@ public class ParamFilter implements Filter {
 
         final SlingHttpServletRequest slingRequest = (SlingHttpServletRequest) request;
 
-        if(request.getParameter("id") != null ||
-                request.getParameter("idclient") != null ||
-                request.getParameter("category") != null ||
-                request.getParameter("name") != null){
-            response.getWriter().write("Parameter verified by filter\n");
+        if(request.getParameter("id") != null ){
+            response.getWriter().write("Searching by ID\n");
+        } else if(request.getParameter("idclient") != null ){
+            response.getWriter().write("Searching note by client ID\n");
+        } else if(request.getParameter("category") != null){
+            response.getWriter().write("Searching product by category\n");
+        }else if(request.getParameter("name") != null){
+            response.getWriter().write("Searching product by name\n");
         }
 
         filterChain.doFilter(request, response);
